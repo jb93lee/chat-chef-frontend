@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Title = ({pageName}) => {
-    console.log("🚀 ~ Title ~ pageName:", pageName)
+    // console.log("🚀 ~ Title ~ pageName:", pageName)
     if(pageName === 'home'){
         return (
             <div className="px-2 pt-6">

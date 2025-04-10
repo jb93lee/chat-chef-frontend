@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MessageBox from "../components/MessageBox";
 import PrevButton from "../components/PrevButton";
 import { MoonLoader } from "react-spinners";
 
-const Chat = () => {
+const Chat = ({ingredientList}) => {
   // logic
-
   const [value, setValue] = useState("");
+
+  // .env 파일 호출
+  const serverAddr = process.env.REACT_APP_SERVER_ADDRESS;
 
   // TODO: set함수 추가하기
   const [messages] = useState([]); // chatGPT와 사용자의 대화 메시지 배열
@@ -22,6 +24,13 @@ const Chat = () => {
     event.preventDefault();
     console.log("메시지 보내기");
   };
+
+  useEffect(() => {
+    console.log("🚀🚀🚀🚀~ ingredientList:", ingredientList);
+    console.log("🚀 ~ Chat ~ serverAddr:", serverAddr);
+  } 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  , []); 
 
   // view
   return (

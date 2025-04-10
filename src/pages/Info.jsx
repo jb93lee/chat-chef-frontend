@@ -1,29 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PrevButton from "../components/PrevButton";
 import InfoInput from "../components/InfoInput";
 import AddButton from "../components/AddButton";
 import Button from "../components/Button";
 import Title from "../components/Title";
+import { useNavigate } from "react-router-dom";
 
-const Info = () => {
+const Info = ({sendIngredientList}) => {
   // logic
 
   // TODO: set함수 추가하기
-  const [ingredientList] = useState([]); // 사용자가 입력할 재료 목록
-
+  const [ingredientList, setIngredientList] = useState([]); // 재료 목록
+  
   const addIngredient = () => {
-    // console.log("재료 추가하기");
-    const newIngredient = {
-      id: ingredientList.length + 1,
-      name: "",
-      amount: "",
-    };
-    ingredientList.push(newIngredient);
+    console.log("재료 추가하기")
+    const id = Date.now(); // 현재 시간을 id로 사
+    const newItem = {
+      id,
+      lable : `ingredient_${id}`,
+      text : "재료명",
+      value : "",
+    }
+    setIngredientList(([...ingredientList, newItem])); // 재료 목록에 새로운 재료 추가  
+  
   };
+
+  useEffect(() => {
+      console.log("🚀 ~ Info ~ ingredientList:", ingredientList)
+    }, [ingredientList]) // ingredientList가 변경될 때마다 콘솔에 출력
+
+    const handleChange = (id, newValue) => {
+      setIngredientList((prevList) =>
+        prevList.map((item) => (item.id === id ? { ...item, value: newValue } : item))
+      ); // 재료 목록에서 해당 재료의 value 업데이트
+    }
+
+  const handleRemove = (id) => {
+    setIngredientList((prevList) => prevList.filter((item) => item.id !== id)); // 재료 목록에서 해당 재료 삭제
+  };
+
+  const history = useNavigate(); // 페이지 이동을 위한 useNavigate
 
   const handleNext = () => {
-    console.log("chat페이지로 이동");
-  };
+    const filterDataList = ingredientList.filter((item) => item.value.trim() !== '')
+    if (filterDataList.length) {
+      sendIngredientList(filterDataList); // 재료 목록을 부모 컴포넌트로 전달
+      history('/chat');
+      return
+    }
+    alert('재료명을 1개이상 입력해주세요')
+  }
 
   // view
   return (
@@ -43,7 +69,7 @@ const Info = () => {
             {/* START:input 영역 */}
             <div>
               {ingredientList.map((item) => (
-                <InfoInput key={item.id} content={item} />
+                <InfoInput key={item.id} content={item} onRemove={handleRemove} onChange={handleChange} />
               ))}
             </div>
             {/* END:input 영역 */}
