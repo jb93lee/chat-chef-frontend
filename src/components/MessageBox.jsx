@@ -19,7 +19,7 @@ const MessageBox = ({ messages, isLoading }) => {
     <>
       {messages.map((data, index) => (
         <div key={index}>
-          {data.role === "user" ? (
+          {(data.role === "user") ? (
             // user 채팅
             <div className="py-4 max-w-3/4 ml-auto text-right">
               <span className="inline-block px-4 py-3 text-sm rounded-xl text-left bg-chef-green-500 text-white rounded-tr-none">
