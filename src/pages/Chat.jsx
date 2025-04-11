@@ -23,6 +23,13 @@ const Chat = ({ingredientList}) => {
   const hadleSubmit = (event) => {
     event.preventDefault();
     console.log("메시지 보내기");
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { role: "user", content: value },
+    ]);
+    setValue("");
+    // setIsMessageLoading(true); // 메시지 전송시 로딩
+
   };
 
   const sendInfo = async () => {
@@ -35,15 +42,28 @@ const Chat = ({ingredientList}) => {
         },
         body: JSON.stringify({ ingredientList }),
       });
-      const data = await response.json();
-      console.log("🚀 ~ sendInfo ~ data:", data);
+      const result = await response.json();
+      const lastMessage = result.data[result.data.length - 1]; // 예시 구조에 따라 수정 필요
+      
+      if(!result.data) return;
+      
+      const removeLastDataList = result.data.slice(0, -1); // 마지막 데이터 제거
+      console.log("🚀 ~ sendInfo ~ removeLastDataList:", removeLastDataList);
+      
+      // setInfoMessages(removeLastDataList); // 메시지 전송
+
+      const newMessage = { role: "assistant", content: lastMessage.content };
+      setMessages((prev) => [...prev, newMessage]);
+      
+      // console.log("🚀 ~ sendInfo ~ new message:", newMessage);
+      
     }
     catch (error) { 
       console.error("Error:", error);
     }
     finally {
       setIsInfoLoading(false);
-      // setIsMessageLoading(false);
+      setIsMessageLoading(false); // 메시지 전송시 로딩
       console.log("로딩 완료"); 
     }     
   }
