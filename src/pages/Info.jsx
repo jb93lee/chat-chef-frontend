@@ -25,10 +25,6 @@ const Info = ({sendIngredientList}) => {
   
   };
 
-  useEffect(() => {
-      console.log("🚀 ~ Info ~ ingredientList:", ingredientList)
-    }, [ingredientList]) // ingredientList가 변경될 때마다 콘솔에 출력
-
     const handleChange = (id, newValue) => {
       setIngredientList((prevList) =>
         prevList.map((item) => (item.id === id ? { ...item, value: newValue } : item))
