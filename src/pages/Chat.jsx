@@ -11,9 +11,9 @@ const Chat = ({ingredientList}) => {
   const serverAddr = process.env.REACT_APP_SERVER_ADDRESS;
 
   // TODO: set함수 추가하기
-  const [messages] = useState([]); // chatGPT와 사용자의 대화 메시지 배열
-  const [isInfoLoading] = useState(false); // 최초 정보 요청시 로딩
-  const [isMessageLoading] = useState(true); // 사용자와 메시지 주고 받을때 로딩
+  const [messages, setMessages] = useState([]); // chatGPT와 사용자의 대화 메시지 배열
+  const [isInfoLoading, setIsInfoLoading] = useState(true); // 최초 정보 요청시 로딩
+  const [isMessageLoading, setIsMessageLoading] = useState(true); // 사용자와 메시지 주고 받을때 로딩
   const hadleChange = (event) => {
     const { value } = event.target;
     console.log("value==>", value);
@@ -25,7 +25,31 @@ const Chat = ({ingredientList}) => {
     console.log("메시지 보내기");
   };
 
+  const sendInfo = async () => {
+    try {
+      // 서버에 재료 목록 전송
+      const response = await fetch(`${serverAddr}/recipe`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ingredientList }),
+      });
+      const data = await response.json();
+      console.log("🚀 ~ sendInfo ~ data:", data);
+    }
+    catch (error) { 
+      console.error("Error:", error);
+    }
+    finally {
+      setIsInfoLoading(false);
+      // setIsMessageLoading(false);
+      console.log("로딩 완료"); 
+    }     
+  }
+
   useEffect(() => {
+    sendInfo();
     console.log("🚀🚀🚀🚀~ ingredientList:", ingredientList);
     console.log("🚀 ~ Chat ~ serverAddr:", serverAddr);
   } 
